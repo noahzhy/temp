@@ -5,6 +5,26 @@
 * Every Coq command should be end with `.`  
 * Using annotation by `(* COMMENTS HERE *)`
 
+## Pred
+We can declare set variables like:
+```
+Variables A B : Set.
+```
+And also assume some predicate variables like:
+```
+Variables P Q : A -> Prop.
+```
+
+### ∀ & ∃
+* Using `forall` to declare some universal quantification. Just like ∀.
+* Using `exists` to declare some existential quantification. Just like ∃.
+
+E.g.
+```
+forall x:A
+exists x:A
+```
+
 ## Hello World
 **Start the first proof**  
 E.g.
@@ -39,7 +59,6 @@ Inductive bool : Set :=
   | false : bool.
 ```
 
-
 ## Prop
 `Prop` means proposition.
 
@@ -50,9 +69,10 @@ Inductive bool : Set :=
 * `~`, ~ P means not P. It's just `┐` in Discrete mathematics.
 * `<->`, P <-> Q means P is equivalent to Q. P <-> Q ≡ (P -> Q) /\ (Q -> P).
 
-### the first proof of this case
+### First proof of this case
 E.g.  
 ```
+Variables P Q R : Prop.
 Lemma I : P -> P.
   intro p.
   exact p.
@@ -65,21 +85,38 @@ Qed.
 * Using `exact` if the subgoal matches an hypothesis what we can finish the proof by using this assumption.
 * Using `Qed` to end the demonstration.
 
+![](0001.jpg)
 
+* `1 subgoal` means you have one goal need to prove.
+* `============================` is the dividing line. The above is the assumptions and conditions. The following is the part that needs proof.
 
+### Assumptions
+E.g.
+```
+Variables P Q R : Prop.
+Lemma C : (P -> Q) -> (Q -> R) -> P -> R.
+intro pq.
+intro qr.
+intro p.
+apply qr.
+apply pq.
+exact p.
+Qed.
+```
 
+* `intro pq` means P -> Q.
+* Using `apply qr` to apply the assumption which we want.
 
-
-## Pred
-
-
-
-
-
-
-
-
-
+### Disjunction
+E.g.
+```
+Variables P Q R : Prop.
+Lemma inl : P -> P \/ Q.
+intros p.
+left.
+exact p.
+Qed.
+```
 
 ## Bool
 ### Defining & Operating
@@ -99,9 +136,7 @@ Definition negb (b:bool) : bool :=
   end.
 ```
 
-Some boolean functions can be defined easily.  
-
-E.g.
+Some boolean functions can be defined easily.
 ```
 Definition andb(b c:bool) : bool :=
   if b then c else false.
@@ -117,5 +152,16 @@ destruct b;
 Qed.
 ```
 
+E.g.
+```
+Lemma andb_comm : forall x y : bool, andb x y = andb y x.
+intros x y.
+destruct x;
+  (destruct y; 
+     reflexivity).
+Qed.
+```
+
 * Using `destruct` b creates a case for b = true and one for b = false.
 * Using `reflexivity` to make some simplified goals.
+
